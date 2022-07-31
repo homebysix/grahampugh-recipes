@@ -5,7 +5,7 @@
     <input_type>
         <type>script</type>
         <platform>Mac</platform>
-        <script>#!/usr/bin/python
+        <script>#!/usr/local/autopkg/python
 
 '''
 AdoptOpenJDK Version Extension Attribute

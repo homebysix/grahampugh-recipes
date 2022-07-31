@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/autopkg/python
 #
 # 2017 Graham R Pugh
 #
@@ -26,6 +26,7 @@ __all__ = ["Java6Versioner"]
 
 class Java6Versioner(Processor):
     """Provides version of Java SE 6 for macOS."""
+
     input_variables = {
         "info_path": {
             "required": True,
@@ -48,10 +49,11 @@ class Java6Versioner(Processor):
         return javaVersion
 
     def main(self):
-        info_path = self.env.get('info_path')
-        self.env['version'] = self.get_version(info_path)
-        self.output('Latest Version found: %s' % self.env['version'])
+        info_path = self.env.get("info_path")
+        self.env["version"] = self.get_version(info_path)
+        self.output("Latest Version found: %s" % self.env["version"])
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     PROCESSOR = Java6Versioner()
     PROCESSOR.execute_shell()

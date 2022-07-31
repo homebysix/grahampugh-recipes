@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/autopkg/python
 # FilemakerProAdvancedUpdateDMGExtractor.py
 # Extracts a FileMaker updater package from a given DMG.
 #
@@ -17,7 +17,6 @@
 #
 
 
-
 """See docstring for FilemakerProAdvancedUpdateDMGExtractor class"""
 
 from __future__ import absolute_import
@@ -32,6 +31,7 @@ from autopkglib.DmgMounter import DmgMounter
 
 __all__ = ["FilemakerProAdvancedUpdateExtractor"]
 
+
 class FilemakerProAdvancedUpdateExtractor(DmgMounter):
     """Extracts update pkg from given DMG or ZIP"""
 
@@ -39,18 +39,16 @@ class FilemakerProAdvancedUpdateExtractor(DmgMounter):
     input_variables = {
         "downloaded_file": {
             "required": True,
-            "description":
-                "The path to the DMG or ZIP downloaded from the FileMaker website"
+            "description": "The path to the DMG or ZIP downloaded from the FileMaker website",
         }
     }
     output_variables = {
-        "extracted_pkg": {
-            "description": "Outputs the extracted package path."
-        }
+        "extracted_pkg": {"description": "Outputs the extracted package path."}
     }
+
     def find_pkg(self, dir_path):
-        '''Return path to the first package in dir_path'''
-        #pylint: disable=no-self-use
+        """Return path to the first package in dir_path"""
+        # pylint: disable=no-self-use
         for item in os.listdir(dir_path):
             if item.endswith(".pkg"):
                 return os.path.join(dir_path, item)
@@ -65,11 +63,13 @@ class FilemakerProAdvancedUpdateExtractor(DmgMounter):
     def main(self):
         if self.is_zip(self.env["downloaded_file"]):
             try:
-                with zipfile.ZipFile(self.env["downloaded_file"], 'r') as zf:
+                with zipfile.ZipFile(self.env["downloaded_file"], "r") as zf:
                     contents = zf.namelist()
-                    pkgs = [f for f in contents if fnmatch.fnmatch(f, '*.pkg')]
+                    pkgs = [f for f in contents if fnmatch.fnmatch(f, "*.pkg")]
                     zf.extract(pkgs[0], self.env["RECIPE_CACHE_DIR"])
-                    self.env["extracted_pkg"] = os.path.join(self.env["RECIPE_CACHE_DIR"], os.path.basename(pkgs[0]))
+                    self.env["extracted_pkg"] = os.path.join(
+                        self.env["RECIPE_CACHE_DIR"], os.path.basename(pkgs[0])
+                    )
             except Exception as err:
                 raise ProcessorError(err)
         else:
@@ -78,12 +78,15 @@ class FilemakerProAdvancedUpdateExtractor(DmgMounter):
             # unmounted.
             try:
                 pkg = self.find_pkg(mount_point)
-                shutil.copy(pkg, self.env['RECIPE_CACHE_DIR'])
-                self.env["extracted_pkg"] = os.path.join(self.env['RECIPE_CACHE_DIR'], os.path.basename(pkg))
+                shutil.copy(pkg, self.env["RECIPE_CACHE_DIR"])
+                self.env["extracted_pkg"] = os.path.join(
+                    self.env["RECIPE_CACHE_DIR"], os.path.basename(pkg)
+                )
             except Exception as err:
                 raise ProcessorError(err)
             finally:
                 self.unmount(self.env["downloaded_file"])
+
 
 if __name__ == "__main__":
     PROCESSOR = FilemakerProAdvancedUpdateExtractor()

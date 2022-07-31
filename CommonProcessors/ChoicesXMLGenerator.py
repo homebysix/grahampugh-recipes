@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/autopkg/python
 #
 # Copyright 2019 Graham Pugh
 #
@@ -79,7 +79,7 @@ class ChoicesXMLGenerator(Processor):
         """Generates the python dictionary of choices.
         Desired choices are given the choice attribute '1' (chosen).
         Other choices found are given the choice attribute '0'
-        (not chosen). """
+        (not chosen)."""
         parsed_choices = []
         for child_dict in child_items:
             try:

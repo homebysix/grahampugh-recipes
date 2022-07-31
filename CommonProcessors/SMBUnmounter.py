@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/autopkg/python
 
 """
 2020 Graham R Pugh
@@ -30,7 +30,10 @@ class SMBUnmounter(Processor):
     """Unmounts an SMB share. Requires a mount point to be passed through from SMBMounter"""
 
     input_variables = {
-        "mount_point": {"description": "Mount Point.", "required": True,},
+        "mount_point": {
+            "description": "Mount Point.",
+            "required": True,
+        },
     }
 
     output_variables = {}

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/autopkg/python
 #
 # Copyright 2017 Graham Pugh
 #
@@ -22,42 +22,40 @@ from autopkglib import Processor, ProcessorError
 
 __all__ = ["ParallelsDesktopPackager"]
 
+
 class ParallelsDesktopPackager(Processor):
-    description = ("Inserts the license into the deploy.cfg file of the "
-                   "Parallels Desktop Autodeploy.pkg")
+    description = (
+        "Inserts the license into the deploy.cfg file of the "
+        "Parallels Desktop Autodeploy.pkg"
+    )
     input_variables = {
         "CONFIG_FILE_PATH": {
             "required": True,
-            "description": ("the path to deploy.cfg")
+            "description": ("the path to deploy.cfg"),
         },
         "INFO_PLIST_PATH": {
             "required": True,
-            "description": ("the path to Info.plist")
+            "description": ("the path to Info.plist"),
         },
-        "license_key": {
-            "required": True,
-            "description": ("the license key")
-        },
+        "license_key": {"required": True, "description": ("the license key")},
         "software_updates_check": {
             "required": False,
-            "description": ("0 - never",
-                            "1 - once a day",
-                            "2 - once a week",
-                            "3 - once a month"),
-            "default": "0"
+            "description": (
+                "0 - never",
+                "1 - once a day",
+                "2 - once a week",
+                "3 - once a month",
+            ),
+            "default": "0",
         },
         "software_updates_auto_download": {
             "required": False,
             "description": ("on or off"),
-            "default": "off"
+            "default": "off",
         },
-        "version": {
-            "required": True,
-            "description": "the package version number"
-        },
+        "version": {"required": True, "description": "the package version number"},
     }
-    output_variables = {
-    }
+    output_variables = {}
 
     __doc__ = description
 
@@ -70,25 +68,29 @@ class ParallelsDesktopPackager(Processor):
         su_auto_download = self.env.get("software_updates_auto_download")
 
         # text as will be replaced in deploy.cfg
-        license_key_string_before = "license_key=\"XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX\""
-        license_key_string_after = "license_key=\"%s\"" % license_key
-        su_check_string_before = "#updates_auto_check=\"2\""
-        su_check_string_after = "updates_auto_check=\"%s\"" % su_check
+        license_key_string_before = 'license_key="XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX"'
+        license_key_string_after = 'license_key="%s"' % license_key
+        su_check_string_before = '#updates_auto_check="2"'
+        su_check_string_after = 'updates_auto_check="%s"' % su_check
         # su_check_string_after = "updates_auto_check=\"0\""
-        su_auto_download_before = "#updates_auto_download=\"on\""
-        su_auto_download_after = "updates_auto_download=\"%s\"" % su_auto_download
+        su_auto_download_before = '#updates_auto_download="on"'
+        su_auto_download_after = 'updates_auto_download="%s"' % su_auto_download
         # su_auto_download_after = "updates_auto_download=\"off\""
 
         # Read in the deploy.cfg file
-        with open(CONFIG_FILE_PATH, 'r') as file:
+        with open(CONFIG_FILE_PATH, "r") as file:
             filedata = file.read()
 
         # Replace the target strings
-        for r in ((license_key_string_before, license_key_string_after), (su_check_string_before, su_check_string_after), (su_auto_download_before, su_auto_download_after)):
+        for r in (
+            (license_key_string_before, license_key_string_after),
+            (su_check_string_before, su_check_string_after),
+            (su_auto_download_before, su_auto_download_after),
+        ):
             filedata = filedata.replace(*r)
 
         # Write the file out again
-        with open(CONFIG_FILE_PATH, 'w') as file:
+        with open(CONFIG_FILE_PATH, "w") as file:
             file.write(filedata)
 
         # Now to edit the bundle version in Info.plist
